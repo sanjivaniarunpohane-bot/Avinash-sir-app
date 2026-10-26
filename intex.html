@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#081426">
+<title>Avinash Sir Smart Class</title>
+<style>
+:root {
+  --bg:#081426; --panel:#111f35; --panel2:#172943;
+  --blue:#3988ff; --cyan:#36d9ef; --text:#f1f6ff;
+  --muted:#a8b8d0; --line:#2b405d; --green:#45dfaa;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg); color:var(--text);
+}
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+header {
+  padding:17px 20px; display:flex; align-items:center;
+  justify-content:space-between; gap:12px; flex-wrap:wrap;
+  background:#0c1a30; border-bottom:1px solid var(--line);
+}
+.brand { display:flex; align-items:center; gap:12px; }
+.logo {
+  width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;font-weight:900;font-size:19px;
+  background:linear-gradient(135deg,#3988ff,#36d9ef);color:#061426;
+}
+h1 { font-size:19px; margin:0 0 5px; }
+.subtitle { font-size:12px; color:var(--muted); }
+button,.btn {
+  border:1px solid var(--line); background:var(--panel2);
+  color:var(--text); border-radius:10px;padding:10px 13px;
+}
+button.primary { background:var(--blue);border-color:var(--blue); }
+button:hover { filter:brightness(1.12); }
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible { outline:2px solid var(--cyan);outline-offset:2px; }
+.layout { display:grid;grid-template-columns:225px minmax(0,1fr);min-height:calc(100vh - 80px); }
+nav { padding:18px 12px;border-right:1px solid var(--line); }
+.nav-title { color:var(--muted);font-size:11px;letter-spacing:1.5px;padding:10px; }
+.nav-btn { width:100%;text-align:left;margin:3px 0;background:transparent;border-color:transparent; }
+.nav-btn.active,.nav-btn:hover { background:var(--panel2);border-color:var(--line); }
+main { padding:22px;min-width:0;max-width:1400px;width:100%;margin:auto; }
+.page { display:none; }
+.page.active { display:block; }
+h2 { font-size:25px;margin:0 0 8px; }
+p { line-height:1.6; }
+.muted { color:var(--muted); }
+.hero {
+  padding:24px;border:1px solid #29486d;border-radius:18px;
+  background:radial-gradient(ellipse at top right,#173c68,#101f36 60%);
+}
+.hero h2 { font-size:29px; }
+.hero p { color:#c4d4ea;max-width:650px; }
+.grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px; }
+.grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.card { background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px;min-width:0; }
+.card h3 { margin:0 0 9px;font-size:17px; }
+.big-icon { font-size:27px;margin-bottom:12px; }
+.field { display:flex;flex-direction:column;gap:7px;margin:12px 0; }
+label { font-size:13px;color:#c3d2e7; }
+input,select,textarea {
+  width:100%;background:#09172a;border:1px solid var(--line);
+  color:var(--text);border-radius:9px;padding:11px;
+}
+textarea { resize:vertical;min-height:90px; }
+.actions { display:flex;flex-wrap:wrap;gap:8px;margin:12px 0; }
+.note { border-left:3px solid var(--cyan);padding:12px;background:#10243b;border-radius:6px;line-height:1.6; }
+canvas {
+  display:block;width:100%;height:350px;background:#fff;
+  border-radius:9px;touch-action:none;cursor:crosshair;
+}
+#boardArea { background:#dbe7f6;border-radius:12px;padding:8px; }
+#boardArea canvas { height:min(55vh,520px); }
+.quiz-option { display:block;width:100%;text-align:left;margin:8px 0; }
+.correct { border-color:var(--green)!important; }
+.wrong { border-color:#ff7979!important; }
+.result { padding:10px 0;min-height:25px; }
+footer { text-align:center;padding:24px;color:var(--muted);font-size:12px; }
+.small { font-size:12px; }
+.stat { font-size:25px;font-weight:bold;color:var(--cyan); }
+#toast { margin:8px 0;color:var(--green); }
+body.board-mode header,body.board-mode nav,body.board-mode footer { display:none; }
+body.board-mode .layout { display:block; }
+body.board-mode main { max-width:none;padding:14px; }
+body.board-mode #boardArea canvas { height:75vh; }
+@media(max-width:800px) {
+ .layout { grid-template-columns:1fr; }
+ nav { border-right:0;border-bottom:1px solid var(--line);padding:8px;display:flex;overflow-x:auto;gap:4px; }
+ .nav-title { display:none; }
+ .nav-btn { white-space:nowrap;width:auto;flex-shrink:0;padding:10px; }
+ main { padding:14px; }
+ .grid.three { grid-template-columns:1fr; }
+}
+@media(max-width:480px) {
+ .grid { grid-template-columns:1fr; }
+ .hero { padding:17px; }
+ .hero h2 { font-size:24px; }
+ header { padding:13px; }
+}
+@media print {
+ header,nav,.no-print,footer { display:none!important; }
+ body,.card { background:white;color:black; }
+ .layout { display:block; }
+ .page { display:none!important; }
+ #planner.page.active { display:block!important; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">AS</div>
+    <div>
+      <h1>AVINASH SIR SMART CLASS</h1>
+      <div class="subtitle">Learn • Practise • Achieve | Created by N.A.P. / NIRMIT</div>
+    </div>
+  </div>
+  <button class="primary" onclick="toggleBoardMode()">⛶ Board Mode</button>
+</header>
+
+<div class="layout">
+<nav aria-label="Main navigation">
+  <div class="nav-title">LEARNING SPACE</div>
+  <button class="nav-btn active" data-page="home">⌂ Home</button>
+  <button class="nav-btn" data-page="lessons">▤ Grammar Lessons</button>
+  <button class="nav-btn" data-page="board">✎ Digital Whiteboard</button>
+  <button class="nav-btn" data-page="quiz">✓ Classroom Quiz</button>
+  <button class="nav-btn" data-page="spoken">◉ Spoken English</button>
+  <button class="nav-btn" data-page="planner">▦ Lesson Planner</button>
+</nav>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="subtitle">WELCOME TO YOUR DIGITAL CLASSROOM</div>
+    <h2>Teach smarter. Learn with confidence.</h2>
+    <p>One classroom space for English grammar, spoken English, interactive practice and digital-board teaching.</p>
+    <div class="field" style="max-width:360px">
+      <label for="classSelect">Choose class or course</label>
+      <select id="classSelect">
+        <option>Class 7 — Semi-English</option>
+        <option>Class 8 — Semi-English</option>
+        <option>Class 9 — Semi-English</option>
+        <option>Class 10 — Semi-English</option>
+        <option>Class 11</option>
+        <option>Class 12</option>
+        <option>12th Crash Course</option>
+        <option>Spoken English — Summer Batch</option>
+      </select>
+    </div>
+    <button class="primary" onclick="showPage('lessons')">Start Learning →</button>
+    <button onclick="showPage('board')">Open Whiteboard</button>
+  </div>
+
+  <div class="grid three">
+    <div class="card"><div class="big-icon">📘</div><h3>Grammar</h3><p class="muted">Learn rules with examples.</p><button onclick="showPage('lessons')">Open lessons</button></div>
+    <div class="card"><div class="big-icon">✍️</div><h3>Smart Board</h3><p class="muted">Write and explain visually.</p><button onclick="showPage('board')">Open board</button></div>
+    <div class="card"><div class="big-icon">🎯</div><h3>Quick Quiz</h3><p class="muted">Check grammar knowledge.</p><button onclick="showPage('quiz')">Take quiz</button></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Today's classroom goal</h3>
+    <p>Understand one grammar rule, practise five examples and speak five English sentences aloud.</p>
+  </div>
+</section>
+
+<section id="lessons" class="page">
+  <h2>English Grammar Lessons</h2>
+  <p class="muted">Choose a topic, study the rule, then reveal the answers.</p>
+  <div class="card">
+    <div class="field">
+      <label for="topic">Grammar topic</label>
+      <select id="topic" onchange="changeLesson()">
+        <option value="present">Simple Present Tense</option>
+        <option value="past">Simple Past Tense</option>
+        <option value="future">Simple Future Tense</option>
+        <option value="continuous">Present Continuous Tense</option>
+        <option value="articles">Articles: A, An, The</option>
+        <option value="prepositions">Prepositions</option>
+      </select>
+    </div>
+    <div id="lessonContent" class="note"></div>
+    <h3 style="margin-top:22px">Practise</h3>
+    <div id="lessonPractice"></div>
+    <button class="primary" onclick="revealLesson()">Reveal answers</button>
+    <div id="lessonAnswers" class="result" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="board" class="page">
+  <h2>Digital Whiteboard</h2>
+  <p class="muted">Use your finger, stylus or mouse. Works on touchscreens.</p>
+  <div class="card">
+    <div class="actions no-print">
+      <label>Pen colour <input id="penColor" type="color" value="#172b50" style="width:48px;padding:3px;vertical-align:middle"></label>
+      <label>Pen size <select id="penSize" style="width:85px"><option value="2">Thin</option><option value="4" selected>Medium</option><option value="8">Thick</option><option value="14">Extra thick</option></select></label>
+      <button id="penButton" class="primary" onclick="setTool('pen')">✎ Pen</button>
+      <button id="eraserButton" onclick="setTool('eraser')">⌫ Eraser</button>
+      <button onclick="clearBoard()">Clear board</button>
+      <button onclick="downloadBoard()">Save drawing</button>
+    </div>
+    <div id="boardArea"><canvas id="whiteboard" aria-label="Interactive drawing whiteboard"></canvas></div>
+    <p class="small muted">Tip: saved drawings are downloaded to your device. Clearing the board cannot be undone.</p>
+  </div>
+</section>
+
+<section id="quiz" class="page">
+  <h2>Classroom Grammar Quiz</h2>
+  <p class="muted">Choose one answer for each question, then check your score.</p>
+  <div class="card">
+    <div class="stat" id="quizProgress">0 / 3 answered</div>
+    <div id="quizQuestions"></div>
+    <div class="actions">
+      <button class="primary" onclick="checkQuiz()">Check my answers</button>
+      <button onclick="resetQuiz()">Try again</button>
+    </div>
+    <div class="result" id="quizResult" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="spoken" class="page">
+  <h2>Spoken English Practice</h2>
+  <p class="muted">Speak clearly, practise with a partner and build confidence.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Daily speaking prompts</h3>
+      <div class="field">
+        <label for="speakTopic">Choose a topic</label>
+        <select id="speakTopic" onchange="changeSpeaking()">
+          <option value="intro">Self introduction</option>
+          <option value="school">My school</option>
+          <option value="friend">My best friend</option>
+          <option value="goal">My future goal</option>
+          <option value="environment">Protect the environment</option>
+        </select>
+      </div>
+      <div id="speakingPrompt" class="note"></div>
+      <button class="primary" style="margin-top:12px" onclick="speakPrompt()">🔊 Listen</button>
+    </div>
+    <div class="card">
+      <h3>Useful classroom sentences</h3>
+      <p>May I come in, sir?</p>
+      <p>Could you please explain this again?</p>
+      <p>I understand the concept.</p>
+      <p>May I answer the question?</p>
+      <p>Thank you for your explanation.</p>
+      <button onclick="speakText('May I come in, sir? Could you please explain this again? I understand the concept. May I answer the question? Thank you for your explanation.')">🔊 Listen to sentences</button>
+    </div>
+  </div>
+</section>
+
+<section id="planner" class="page">
+  <h2>Lesson Planner</h2>
+  <p class="muted">Plan the class and print a lesson sheet.</p>
+  <div class="card">
+    <div class="field"><label for="planDate">Date</label><input id="planDate" type="date"></div>
+    <div class="field"><label for="planClass">Class or batch</label><select id="planClass">
+      <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+      <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+      <option>12th Crash Course</option><option>Spoken English</option>
+    </select></div>
+    <div class="field"><label for="planTopic">Lesson topic</label><input id="planTopic" placeholder="e.g. Simple Past Tense"></div>
+    <div class="field"><label for="planObjective">Learning objective</label><textarea id="planObjective" placeholder="What should students understand by the end?"></textarea></div>
+    <div class="field"><label for="planActivity">Class activity / homework</label><textarea id="planActivity" placeholder="Examples, group activity, homework..."></textarea></div>
+    <div class="actions no-print">
+      <button class="primary" onclick="printPlan()">Print lesson plan</button>
+      <button onclick="savePlan()">Save on this device</button>
+      <button onclick="loadPlan()">Load saved plan</button>
+    </div>
+    <div id="planMessage" class="result" aria-live="polite"></div>
+    <p class="small muted">Plans are stored only in this browser on this device. They are not automatically shared across devices.</p>
+  </div>
+</section>
+
+<div id="toast" aria-live="polite"></div>
+</main>
+</div>
+
+<footer>AVINASH SIR SMART CLASS · Educational Demo · Created by N.A.P. / NIRMIT</footer>
+
+<script>
+"use strict";
+
+const lessons = {
+present: {
+title:"Simple Present Tense",
+rule:"Use the simple present for habits, routines and general facts. With he, she or it, usually add -s or -es to the main verb.",
+examples:"I play cricket. She plays cricket. The sun rises in the east.",
+questions:["He ___ to school every day.","They ___ English every morning.","Water ___ at 100°C at sea level."],
+answers:["goes","study","boils"]
+},
+past: {
+title:"Simple Past Tense",
+rule:"Use the simple past for completed actions in the past. Regular verbs often end in -ed; irregular verbs have special forms.",
+examples:"I played yesterday. She went home. They studied last night.",
+questions:["We ___ a film yesterday.","She ___ to Pune last week.","He ___ his homework last night."],
+answers:["watched","went","finished"]
+},
+future: {
+title:"Simple Future Tense",
+rule:"Use will + the base form of a verb for future predictions, decisions and promises.",
+examples:"I will study tomorrow. She will help us. They will arrive soon.",
+questions:["I ___ call you tomorrow.","She ___ help her friend.","They ___ visit us next week."],
+answers:["will","will","will"]
+},
+continuous: {
+title:"Present Continuous Tense",
+rule:"Use am/is/are + verb-ing for actions happening now or around the present time.",
+examples:"I am reading. He is writing. They are playing.",
+questions:["I ___ reading now.","She ___ cooking.","They ___ playing."],
+answers:["am","is","are"]
+},
+articles: {
+title:"Articles: A, An, The",
+rule:"Use a before a consonant sound, an before a vowel sound, and the for a particular or already identified noun.",
+examples:"a book, an apple, an hour, the sun.",
+questions:["I ate ___ apple.","She has ___ blue pen.","___ sun gives us light."],
+answers:["an","a","The"]
+},
+prepositions: {
+title:"Prepositions",
+rule:"Prepositions show relationships such as place, time or direction.",
+examples:"The book is on the table. We meet at noon. She walked into the room.",
+questions:["The book is ___ the table.","School starts ___ 7 a.m.","He walked ___ the room."],
+answers:["on","at","into"]
+}
+};
+
+function showPage(id) {
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="board") requestAnimationFrame(resizeCanvas);
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+
+function changeLesson() {
+ const lesson=lessons[document.getElementById("topic").value];
+ document.getElementById("lessonContent").innerHTML=
+  "<strong>"+lesson.title+"</strong><br>"+lesson.rule+"<br><br><strong>Examples:</strong> "+lesson.examples;
+ document.getElementById("lessonPractice").innerHTML=lesson.questions.map((q,i)=>
+  '<div class="field"><label for="practice'+i+'">'+(i+1)+'. '+q+'</label><input id="practice'+i+'" autocomplete="off" placeholder="Write your answer"></div>'
+ ).join("");
+ document.getElementById("lessonAnswers").textContent="";
+}
+function revealLesson() {
+ const lesson=lessons[document.getElementById("topic").value];
+ document.getElementById("lessonAnswers").textContent="Answers: "+lesson.answers.join(" • ");
+}
+changeLesson();
+
+const quizData=[
+ {q:"She ___ to school every day.",opts:["go","goes","going"],a:1,why:"With she, use goes in the simple present."},
+ {q:"Yesterday, they ___ football.",opts:["play","played","plays"],a:1,why:"Yesterday indicates the past; played is the simple past."},
+ {q:"I ___ studying right now.",opts:["am","is","are"],a:0,why:"Use am with I in the present continuous."}
+];
+function renderQuiz() {
+ const host=document.getElementById("quizQuestions");
+ host.innerHTML=quizData.map((q,i)=>'<div class="card" style="margin-top:14px"><h3>'+(i+1)+'. '+q.q+'</h3>'+
+ q.opts.map((o,j)=>'<label class="quiz-option"><input style="width:auto" type="radio" name="q'+i+'" value="'+j+'" onchange="updateQuizProgress()"> '+o+'</label>').join("")+
+ '<div class="small muted" id="why'+i+'"></div></div>').join("");
+ updateQuizProgress();
+}
+function updateQuizProgress() {
+ let n=quizData.filter((q,i)=>document.querySelector('input[name="q'+i+'"]:checked')).length;
+ document.getElementById("quizProgress").textContent=n+" / "+quizData.length+" answered";
+}
+function checkQuiz() {
+ let score=0, unanswered=0;
+ quizData.forEach((q,i)=>{
+  const chosen=document.querySelector('input[name="q'+i+'"]:checked');
+  const why=document.getElementById("why"+i);
+  if(!chosen){unanswered++;why.textContent="Please answer this question.";why.style.color="#ffbf80";return;}
+  const correct=Number(chosen.value)===q.a;
+  if(correct)score++;
+  why.textContent=(correct?"Correct! ":"Not quite. Correct answer: "+q.opts[q.a]+". ")+q.why;
+  why.style.color=correct?"#45dfaa":"#ff9999";
+ });
+ document.getElementById("quizResult").textContent="Score: "+score+"/"+quizData.length+(unanswered?" · "+unanswered+" unanswered":"");
+}
+function resetQuiz(){renderQuiz();document.getElementById("quizResult").textContent="";}
+renderQuiz();
+
+const prompts={
+intro:"Introduce yourself: say your name, class, interests and one goal. Try to speak for 30–60 seconds.",
+school:"Describe your school, your favourite subject, your teachers and one thing you enjoy there.",
+friend:"Describe a good friend. Talk about their qualities and a memorable activity you did together.",
+goal:"Explain your future goal, why it matters to you and what steps you can take to achieve it.",
+environment:"Talk about keeping your surroundings clean, saving water and reducing waste."
+};
+function changeSpeaking(){document.getElementById("speakingPrompt").textContent=prompts[document.getElementById("speakTopic").value];}
+changeSpeaking();
+function speakText(text) {
+ if(!("speechSynthesis" in window)){alert("Text-to-speech is not supported in this browser.");return;}
+ window.speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(text);
+ utterance.lang="en-IN";utterance.rate=0.88;
+ window.speechSynthesis.speak(utterance);
+}
+function speakPrompt(){speakText(prompts[document.getElementById("speakTopic").value]);}
+
+const canvas=document.getElementById("whiteboard");
+const ctx=canvas.getContext("2d");
+let drawing=false,lastX=0,lastY=0,tool="pen",lastPointTime=0;
+function resizeCanvas(){
+ const rect=canvas.getBoundingClientRect();
+ if(!rect.width||!rect.height)return;
+ const dpr=Math.min(window.devicePixelRatio||1,2);
+ const old=document.createElement("canvas");
+ old.width=canvas.width;old.height=canvas.height;
+ old.getContext("2d").drawImage(canvas,0,0);
+ canvas.width=Math.round(rect.width*dpr);
+ canvas.height=Math.round(rect.height*dpr);
+ ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);
+ if(old.width&&old.height)ctx.drawImage(old,0,0,old.width,old.height,0,0,canvas.width,canvas.height);
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ ctx.lineCap="round";ctx.lineJoin="round";
+}
+function pointerPos(e){
+ const r=canvas.getBoundingClientRect();
+ return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+canvas.addEventListener("pointerdown",e=>{
+ if(e.button!==undefined&&e.button!==0)return;
+ e.preventDefault();canvas.setPointerCapture(e.pointerId);
+ const p=pointerPos(e);drawing=true;lastX=p.x;lastY=p.y;
+ lastPointTime=performance.now();
+ ctx.beginPath();ctx.arc(p.x,p.y,Math.max(1,Number(document.getElementById("penSize").value)/2),0,Math.PI*2);
+ ctx.fillStyle=tool==="eraser"?"#ffffff":document.getElementById("penColor").value;ctx.fill();
+});
+canvas.addEventListener("pointermove",e=>{
+ if(!drawing)return;
+ e.preventDefault();
+ const p=pointerPos(e);
+ ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);
+ ctx.strokeStyle=tool==="eraser"?"#ffffff":document.getElementById("penColor").value;
+ ctx.lineWidth=tool==="eraser"?Number(document.getElementById("penSize").value)*5:Number(document.getElementById("penSize").value);
+ ctx.stroke();lastX=p.x;lastY=p.y;lastPointTime=performance.now();
+});
+function stopDrawing(){drawing=false;}
+canvas.addEventListener("pointerup",stopDrawing);
+canvas.addEventListener("pointercancel",stopDrawing);
+canvas.addEventListener("lostpointercapture",stopDrawing);
+function setTool(t){
+ tool=t;
+ document.getElementById("penButton").classList.toggle("primary",t==="pen");
+ document.getElementById("eraserButton").classList.toggle("primary",t==="eraser");
+}
+function clearBoard(){
+ if(confirm("Clear the entire whiteboard?")){
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle="#ffffff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);ctx.restore();
+ }
+}
+function downloadBoard(){
+ const link=document.createElement("a");link.download="avinash-sir-whiteboard.png";
+ link.href=canvas.toDataURL("image/png");link.click();
+}
+window.addEventListener("resize",()=>{if(document.getElementById("board").classList.contains("active"))resizeCanvas();});
+requestAnimationFrame(resizeCanvas);
+
+function toggleBoardMode(){
+ document.body.classList.toggle("board-mode");
+ const on=document.body.classList.contains("board-mode");
+ if(on){
+  showPage("board");
+  document.body.classList.add("board-mode");
+  if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
+ }else{
+  if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});
+  showPage("home");
+ }
+ setTimeout(resizeCanvas,150);
+}
+document.addEventListener("fullscreenchange",()=>{
+ if(!document.fullscreenElement&&document.body.classList.contains("board-mode")){
+  document.body.classList.remove("board-mode");showPage("home");
+ }
+});
+
+function planData(){
+ return {
+ date:document.getElementById("planDate").value,
+ cls:document.getElementById("planClass").value,
+ topic:document.getElementById("planTopic").value,
+ objective:document.getElementById("planObjective").value,
+ activity:document.getElementById("planActivity").value
+ };
+}
+function savePlan(){
+ try{
+  localStorage.setItem("avinashSirLessonPlan",JSON.stringify(planData()));
+  document.getElementById("planMessage").textContent="Lesson plan saved on this device.";
+ }catch(e){document.getElementById("planMessage").textContent="Could not save. Check browser storage settings.";}
+}
+function loadPlan(){
+ try{
+  const d=JSON.parse(localStorage.getItem("avinashSirLessonPlan")||"null");
+  if(!d){document.getElementById("planMessage").textContent="No saved plan found on this device.";return;}
+  document.getElementById("planDate").value=d.date||"";
+  document.getElementById("planClass").value=d.cls||"Class 7";
+  document.getElementById("planTopic").value=d.topic||"";
+  document.getElementById("planObjective").value=d.objective||"";
+  document.getElementById("planActivity").value=d.activity||"";
+  document.getElementById("planMessage").textContent="Saved plan loaded.";
+ }catch(e){document.getElementById("planMessage").textContent="Could not load the saved plan.";}
+}
+function printPlan(){
+ const d=planData();
+ const w=window.open("","_blank");
+ if(!w){alert("Allow pop-ups to print the lesson plan.");return;}
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ w.document.write("<!doctype html><html><head><title>Lesson Plan</title><style>body{font:16px Arial;padding:28px;line-height:1.6}h1{color:#173d70}hr{margin:20px 0}</style></head><body><h1>AVINASH SIR SMART CLASS</h1><h2>Lesson Plan</h2><hr><p><b>Date:</b> "+esc(d.date)+"</p><p><b>Class:</b> "+esc(d.cls)+"</p><p><b>Topic:</b> "+esc(d.topic)+"</p><p><b>Learning objective:</b><br>"+esc(d.objective).replace(/\n/g,"<br>")+"</p><p><b>Activity / Homework:</b><br>"+esc(d.activity).replace(/\n/g,"<br>")+"</p><hr><p>Created by N.A.P. / NIRMIT</p></body></html>");
+ w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+document.getElementById("planDate").value=new Date().toISOString().slice(0,10);
+</script>
+</body>
+</html>
